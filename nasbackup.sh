@@ -17,7 +17,7 @@ echo "****************************************************************" > $LOG 2
 echo "*     Start Backup `date`         *" >> $LOG 2>&1
 echo "****************************************************************" >> $LOG 2>&1
 
-rsync -rltDyzPOu --progress --delete /data/fun /mnt/nas >> $LOG 2>&1
+rsync -rltDyzPOu --progress --delete /data/ /mnt/nas/ >> $LOG 2>&1
  
 echo "****************************************************************" >> $LOG 2>&1
 echo "*     Finished Backup `date`      *" >> $LOG 2>&1
