@@ -10,7 +10,7 @@ databases=`mysql --user=$DBUSER --password=$DBPASS -e "SHOW DATABASES;" | tr -d 
 for db in $databases; do
     if [[ "$db" != "information_schema" ]] && [[ "$db" != "performance_schema" ]] && [[ "$db" != "mysql" ]] && [[ "$db" != _* ]] ; then
         echo "Dumping database: $db"
-        mysqldump --force --opt --user=$DBUSER --password=$DBPASS --databases $db > $BACKUPDIR/`date +%Y%m%d`.$db.sql
+        mysqldump --force --opt --user=$DBUSER --password=$DBPASS --databases $db > $BACKUPDIR/$db.`date +%Y%m%d`.sql
     fi
 
 
