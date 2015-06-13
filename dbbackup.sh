@@ -5,6 +5,13 @@ DBUSER='dbbackup'
 DBPASS='EWFfP3GZsqr427Yj'
 BACKUPDIR='/BACKUP/db/'
 
+rotate_backups() {
+    find /BACKUP/db/ -type f -mtime +7 -exec rm -fr {} \;
+}
+
+
+rotate_backups
+
 databases=`mysql --user=$DBUSER --password=$DBPASS -e "SHOW DATABASES;" | tr -d "| " | grep -v Database`
  
 for db in $databases; do
@@ -13,5 +20,6 @@ for db in $databases; do
         mysqldump --force --opt --user=$DBUSER --password=$DBPASS --databases $db > $BACKUPDIR/$db.`date +%Y%m%d`.sql
     fi
 
-
 done
+
+
