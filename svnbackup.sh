@@ -6,7 +6,7 @@ bakdest="/BACKUP/svn/"
 svnrepos="/var/lib/svn"
 
 rotate_backups() {
-        find /BACKUP/svn/ type f -mtime +7 -exec rm -fr {} \;
+        find $backdest -type f -mtime +7 -exec rm -frv {} \;
 }
 
 

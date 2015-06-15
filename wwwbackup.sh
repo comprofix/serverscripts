@@ -5,12 +5,11 @@ BACKUPDIR='/BACKUP/www'
 WWW='/var/www/'
 
 rotate_backups() {
-        find /BACKUP/www/ -type f -mtime +7 -exec rm -fr {} \;
+        find $BACKUPDIR -type f -mtime +7 -exec rm -frv {} \;
 }
 
 
-    rotate_backups
-
+rotate_backups
 
 cd $WWW
 

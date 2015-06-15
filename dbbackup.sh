@@ -6,9 +6,9 @@ DBPASS='EWFfP3GZsqr427Yj'
 BACKUPDIR='/BACKUP/db/'
 
 rotate_backups() {
-    find /BACKUP/db/ -type f -mtime +7 -exec rm -fr {} \;
-}
+    find $BACKUPDIR -type f -mtime +7 -exec rm -frv {} \;
 
+}
 
 rotate_backups
 
