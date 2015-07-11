@@ -60,7 +60,7 @@ check_return() {
 }
 
 send_error_email() {
-sendemail -f "$THISSERVER <$MAILTO>" -t $MAILTO -u "[$THISSERVER] There was an error whilst running $0" -s $SMTP -m
+sendemail -f "$THISSERVER <$MAILTO>" -t $MAILTO -u "[$THISSERVER] There was an error whilst running $0" -s $SMTP
 
 "Hello,
 
