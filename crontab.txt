@@ -1,3 +1,0 @@
-45 00 * * * moe     /opt/scripts/nasbackup.sh
-00 09 * * * root    /opt/scripts/check_updates.sh
-
