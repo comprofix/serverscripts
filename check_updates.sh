@@ -140,7 +140,7 @@ See the logfile for more info: vim $LOGFILE
 
 Regards. " >/tmp/servermail.msg
 
-cat /tmp/servermail.msg | sendemail -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILTO>" -u "[$THISSERVER] server may need some updates applied"
+cat /tmp/servermail.msg | sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILTO>" -u "[$THISSERVER] server may need some updates applied"
 
   echo "`date` [MESSAGE] Packages need updating email sent to $MAILTO" >> $LOGFILE
 fi

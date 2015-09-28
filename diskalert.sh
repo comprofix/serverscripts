@@ -53,7 +53,7 @@ See the logfile for more info: vim $LOGFILE
 
 Regards, " >/tmp/diskalertmail.msg
 
-cat /tmp/diskalertmail.msg | sendemail -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILTO>" -u "[$THISSERVER] is running out of disk space"
+cat /tmp/diskalertmail.msg | sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILTO>" -u "[$THISSERVER] is running out of disk space"
 echo "`date` [MESSAGE] Running out of disk space email sent to $MAILTO" >> $LOGFILE
 
 fi
