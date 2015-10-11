@@ -3,7 +3,7 @@
 
 mkdir -p /var/log/nasbackup
 
-FROMADDRESS=mmckinnon@comprofix.com
+FROMADDRESS=support@comprofix.com
 TOADDRESS=mmckinnon@comprofix.com
 SMTP=mail.comprofix.com
 BODSUBJECT="Backup Log `date +%d-%m-%Y`" 
@@ -17,8 +17,9 @@ echo "****************************************************************" > $LOG 2
 echo "*     Start Backup `date`         *" >> $LOG 2>&1
 echo "****************************************************************" >> $LOG 2>&1
 
-rsync -urtlPO --delete /data/ /mnt/nas/ >> $LOG 2>&1
- 
+#rsync -urtlPO --delete /data/ /mnt/nas/ >> $LOG 2>&1
+rsync -urtlO --delete /data/ /mnt/nas/ >> $LOG 2>&1
+
 echo "****************************************************************" >> $LOG 2>&1
 echo "*     Finished Backup `date`      *" >> $LOG 2>&1
 echo "****************************************************************" >> $LOG 2>&1 
