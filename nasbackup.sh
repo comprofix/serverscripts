@@ -24,7 +24,7 @@ echo "****************************************************************" >> $LOG 
 echo "*     Finished Backup `date`      *" >> $LOG 2>&1
 echo "****************************************************************" >> $LOG 2>&1 
 
-sendemail -f "NAS BACKUP <$FROMADDRESS>" -t $TOADDRESS -u "$BODSUBJECT" -m "$BODSUBJECT" -a $LOG -s $SMTP >> $LOG 2>&1
+sendemail -o tls=no -f "NAS BACKUP <$FROMADDRESS>" -t $TOADDRESS -u "$BODSUBJECT" -m "$BODSUBJECT" -a $LOG -s $SMTP >> $LOG 2>&1
 
 find $LOGFOLDER/* -mtime +$N_DAYS -exec rm {} \;
 
