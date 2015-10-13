@@ -18,7 +18,7 @@ echo "*     Start Backup `date`         *" >> $LOG 2>&1
 echo "****************************************************************" >> $LOG 2>&1
 
 #rsync -urtlPO --delete /data/ /mnt/nas/ >> $LOG 2>&1
-rsync -urtlO --delete /data/ /mnt/nas/ >> $LOG 2>&1
+rsync -urtlO --delete --partial /data/ /mnt/nas/ >> $LOG 2>&1
 
 echo "****************************************************************" >> $LOG 2>&1
 echo "*     Finished Backup `date`      *" >> $LOG 2>&1
