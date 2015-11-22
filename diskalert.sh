@@ -1,9 +1,9 @@
 #!/bin/bash
-MAILTO="mmckinnon@comprofix.com"
+MAILTO="support@comprofix.com"
 SMTP=mail.comprofix.com
 LOGFILE="/var/log/diskalert.log"
 THISSERVER=`hostname --fqdn`
-MAILFROM="mmckinnon@comprofix.com"
+MAILFROM="support@comprofix.com"
 
 startlogging() {
   echo $DASHES2 >> $LOGFILE

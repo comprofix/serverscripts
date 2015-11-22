@@ -14,12 +14,12 @@
 # Make user configuration changes in this section
 #
 
-MAILTO="mmckinnon@comprofix.com"
+MAILTO="support@comprofix.com"
 SMTP=mail.comprofix.com
 AUTOUPDATE="no"
 LOGFILE="/var/log/server_maint.log"
 THISSERVER=`hostname --fqdn`
-MAILFROM="mmckinnon@comprofix.com"
+MAILFROM="support@comprofix.com"
 
 #
 # End of user configuration section
