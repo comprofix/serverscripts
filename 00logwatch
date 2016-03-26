@@ -3,7 +3,7 @@
 MAILTO="support@comprofix.com"
 SMTP=mail.comprofix.com
 THISSERVER=`hostname --fqdn`
-MAILFROM="support@comprofix.com"
+MAILFROM="$(hostname)@$(dnsdomainname)"
 
 #Check if removed-but-not-purged
 test -x /usr/share/logwatch/scripts/logwatch.pl || exit 0
@@ -12,7 +12,7 @@ test -x /usr/share/logwatch/scripts/logwatch.pl || exit 0
 #/usr/sbin/logwatch --output mail
 /usr/sbin/logwatch
 
-sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILTO>" -u "[$THISSERVER] Logwatch" -m "$(cat /tmp/logwatch)" -q
+sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "[$THISSERVER] Logwatch" -m "$(cat /tmp/logwatch)" -q
 
 #Note: It's possible to force the recipient in above command
 #Just pass --mailto address@a.com instead of --output mail

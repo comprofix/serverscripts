@@ -16,10 +16,12 @@
 
 MAILTO="support@comprofix.com"
 SMTP=mail.comprofix.com
+
 AUTOUPDATE="no"
 LOGFILE="/var/log/server_maint.log"
 THISSERVER=`hostname --fqdn`
-MAILFROM="support@comprofix.com"
+MAILFROM="$(hostname)@$(dnsdomainname)"
+
 
 #
 # End of user configuration section
@@ -60,7 +62,7 @@ check_return() {
 }
 
 send_error_email() {
-sendemail -f "$THISSERVER <$MAILTO>" -t $MAILTO -u "[$THISSERVER] There was an error whilst running $0" -s $SMTP
+sendemail -f "$THISSERVER <$MAILFROM>" -t $MAILTO -u "[$THISSERVER] There was an error whilst running $0" -s $SMTP
 
 "Hello,
 
@@ -140,7 +142,7 @@ See the logfile for more info: vim $LOGFILE
 
 Regards. " >/tmp/servermail.msg
 
-sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILTO>" -u "[$THISSERVER] server may need some updates applied" -m "$(cat /tmp/servermail.msg)"
+sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "[$THISSERVER] server may need some updates applied" -m "$(cat /tmp/servermail.msg)"
 
   echo "`date` [MESSAGE] Packages need updating email sent to $MAILTO" >> $LOGFILE
 fi
