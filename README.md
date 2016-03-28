@@ -8,11 +8,12 @@ To send emails the sendEmail package is required
 
 Change the following lines in scripts that send emails
 
-Edit the following for emails:
+MAILFROM is set to determine the server name and domain name for the server and generate and email for it to determine where the email is coming from. This can be changed to specify an email address or you can leave it to generate one.
+
 <pre><code>
-MAILTO="support@comprofix.com"
-SMTP=mail.comprofix.com
-MAILFROM="support@comprofix.com"
+MAILTO=user@example.com
+SMTP=mail.example.com
+MAILFROM=$(hostaname)@$(dnsdomainname)
 </code></pre>
 
 #### 00logwatch
@@ -27,7 +28,7 @@ ln -s $(pwd)/00logwatch /etc/cron.daily
 
 #### check_updates_deb_sh
 
-This script checks for updates on your debian system. If any updates are found it will download them ready for Installation and an email will be sent to an email address specified
+This script checks for updates on your Debian based systems. If any updates are found it will download them ready for Installation and an email will be sent to an email address specified
 
 <b>Installation</b>
 <pre><code>

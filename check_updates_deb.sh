@@ -16,12 +16,11 @@
 
 MAILTO="support@comprofix.com"
 SMTP=mail.comprofix.com
+MAILFROM="$(hostname)@$(dnsdomainname)"
 
 AUTOUPDATE="no"
 LOGFILE="/var/log/server_maint.log"
-THISSERVER=`hostname --fqdn`
-MAILFROM="$(hostname)@$(dnsdomainname)"
-
+THISSERVER=$(hostname -f)
 
 #
 # End of user configuration section
@@ -33,32 +32,32 @@ DASHES2="=======================================================================
 
 # Check if the script is being run as root exit if it is not.
 
-if [ $(id -u) -ne 0 ] 
-then 
-echo "ur not root bro"
- exit 1 
+if [ $(id -u) -ne 0 ]
+then
+echo "You need to be root to run this script."
+ exit 1
 fi
 
 startlogging() {
   echo $DASHES2 >> $LOGFILE
-  echo "$0 started running at `date`" >> $LOGFILE
+  echo "$0 started running at $(date)" >> $LOGFILE
   echo $DASHES2 >> $LOGFILE
 }
 
 stoplogging() {
-  echo "`date` [MESSAGE] $0 finished runnning" >> $LOGFILE
+  echo "$(date) [MESSAGE] $0 finished runnning" >> $LOGFILE
   echo $DASHES >> $LOGFILE
 }
 
 check_return() {
   if [ "$?" -ne "0" ]
     then
-      echo "`date` [ERROR]   $1 failed to run" >> $LOGFILE
+      echo "$(date) [ERROR] $1 failed to run" >> $LOGFILE
       send_error_email $1
       stoplogging
       exit 1
   fi
-  echo "`date` [SUCCESS] $1 ran without error" >> $LOGFILE
+  echo "$(date) [SUCCESS] $1 ran without error" >> $LOGFILE
 }
 
 send_error_email() {
@@ -72,7 +71,7 @@ Whilst running the update script ($0) on $THISSERVER there was a problem.
 
 The server has the following network interfaces configured ${SERVERADDS[@]}.
 
-Please log in via ssh (e.g. ssh root@${IPADDR[0]}) and check the log file:
+Please log in via ssh (e.g. ssh root@$(hostname -f)) and check the log file:
 
 vim $LOGFILE
 
@@ -100,7 +99,7 @@ do
 done
 
 # End IP Address stuff
- 
+
 
 startlogging
 
@@ -122,7 +121,7 @@ fi
 
 if [[ -z $PACKAGES_TO_BE_UPGRADED ]]
 then
-  echo "`date` [MESSAGE] No packages need updating." >> $LOGFILE
+  echo "$(date) [MESSAGE] No packages need updating." >> $LOGFILE
 else
 
 echo "
@@ -134,7 +133,7 @@ $PACKAGES_TO_BE_UPGRADED
 
 The server has the following network interfaces configured ${SERVERADDS[@]}.
 
-To update the server log in via ssh (e.g. ssh root@${IPADDR[0]}) and run the following command:
+To update the server log in via ssh (e.g. ssh root@$(hostname -f)) and run the following command:
 
 apt-get upgrade
 
@@ -144,7 +143,7 @@ Regards. " >/tmp/servermail.msg
 
 sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "[$THISSERVER] server may need some updates applied" -m "$(cat /tmp/servermail.msg)"
 
-  echo "`date` [MESSAGE] Packages need updating email sent to $MAILTO" >> $LOGFILE
+  echo "$(date) [MESSAGE] Packages need updating email sent to $MAILTO" >> $LOGFILE
 fi
 
 stoplogging
