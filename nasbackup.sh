@@ -15,7 +15,7 @@ N_DAYS=7
 
 LOG=$LOGFOLDER/backuplog-`date +%d-%m-%Y`.log
 echo "****************************************************************" > $LOG 2>&1
-echo "     Start Backup $(data)         " >> $LOG 2>&1
+echo "     Start Backup $(date)         " >> $LOG 2>&1
 echo "****************************************************************" >> $LOG 2>&1
 
 #rsync -urtlPO --delete --exclude 'kvm' /data/ /media/nas/ >> $LOG 2>&1
