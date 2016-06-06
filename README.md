@@ -98,3 +98,23 @@ Script sends an email with the rkhunter scan and report.
 apt-get install rkhunter
 ln -s ${PWD}/rkhunter.sh /etc/cron.daily
 </code></pre>
+
+#### mailQWatch.sh
+
+Script checks mailq size on a postfix system and sends an email when queue size is greater than threshold.
+
+Update variables in scripts to suit your needs.
+
+<pre><code>
+QUEUELIMIT=75
+SUBJECT="Mail Queue on $HOST is currently $QUEUECOUNT"
+MAILTO="user@example.com"
+</code></pre>
+
+<b>Installation</b>
+
+As root, sudo will not work.
+
+<pre><code>
+echo "*/5 * * * * ${PWD}/mailQWatch.sh" >> /etc/crontab
+</code></pre>
