@@ -1,8 +1,13 @@
 #!/bin/bash
+# Script Name: mailQWatch
+# Author: Matt McKinnon
+# Date: 7th June 2016
+# Description:
+#   This script will email a report mailq on postfix is high.
 
 QUEUELIMIT=75
 SUBJECT="Mail Queue on $HOST is currently $QUEUECOUNT"
-MAILTO="mmckinnon@comprofix.com"
+MAILTO="support@comprofix.com"
 
 HOST=$(/bin/hostname)
 POSTQUEUE=$(which postqueue)

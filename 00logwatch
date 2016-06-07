@@ -1,18 +1,19 @@
 #!/bin/bash
+# Script Name: 00logwatch
+# Author: Matt McKinnon
+# Date: 7th June 2016
+# Description:
+#   This script will email a logwatch report
 
 MAILTO="support@comprofix.com"
 SMTP=mail.comprofix.com
-THISSERVER=`hostname --fqdn`
+THISSERVER=$(hostname -f)
 MAILFROM="$(hostname)@$(dnsdomainname)"
 
 #Check if removed-but-not-purged
 test -x /usr/share/logwatch/scripts/logwatch.pl || exit 0
 
 #execute
-#/usr/sbin/logwatch --output mail
-/usr/sbin/logwatch
+/usr/sbin/logwatch > /tmp/logwatch
 
 sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "[$THISSERVER] Logwatch" -m "$(cat /tmp/logwatch)" -q
-
-#Note: It's possible to force the recipient in above command
-#Just pass --mailto address@a.com instead of --output mail

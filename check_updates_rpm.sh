@@ -1,23 +1,22 @@
 #!/bin/bash
-# Script Name: check_updates_rpm.sh
-# Author Name: Keith Bawden
-# Modified by: Matthew McKinnon
-# Date: Wed May 17 15:40:32 JST 2006
-# Updated: Mon Nov 22, 2015
+# Script Name: check_updates_rpm
+# Author Name: Matt McKinnon
+# Date: 7th June 2016
 # Description: For use on rpm based distros ie CentOS, Red Hat, Fedora
 # This script will:
 #   Clean up the local rpm repository of retrieved packages (yum clean)
 #   Resync the package index (yum makecache)
 #   If called with AUTOUPDATE set to yes then SECURITY updates will be downloaded and applied. (The package yum-plugin-security is required Install using
 #   yum install yum-plugin-security)
+
 #
 # Make user configuration changes in this section
 #
 
-MAILTO="matthew@ambient-it.com.au"
+MAILTO="support@comprofix.com"
 AUTOUPDATE="no"
 LOGFILE="/var/log/server_maint.log"
-THISSERVER=`hostname --fqdn`
+THISSERVER=$(hostname -f)
 
 #
 # End of user configuration section
@@ -49,12 +48,12 @@ stoplogging() {
 check_return() {
   if [ "$?" -ne "0" ]
     then
-      echo "`date` [ERROR]   $1 failed to run" >> $LOGFILE
+      echo "$(date) [ERROR]   $1 failed to run" >> $LOGFILE
       send_error_email $1
       stoplogging
       exit 1
   fi
-  echo "`date` [SUCCESS] $1 ran without error" >> $LOGFILE
+  echo "$(date) [SUCCESS] $1 ran without error" >> $LOGFILE
 }
 
 send_error_email() {
@@ -115,7 +114,7 @@ fi
 
 if [[ -z $PACKAGES_TO_BE_UPGRADED ]]
 then
-  echo "`date` [MESSAGE] No packages need updating." >> $LOGFILE
+  echo "$(date) [MESSAGE] No packages need updating." >> $LOGFILE
 else
 
 echo "

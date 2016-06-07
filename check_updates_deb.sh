@@ -1,8 +1,9 @@
 #!/bin/bash
-# Script Name: maint.sh
-# Author Name: Keith Bawden
-# Date: Wed May 17 15:40:32 JST 2006
-# Description: This script will:
+# Script Name: check_updates_deb
+# Author Name: Matt McKinnon
+# Date: 7th June 2016
+# Description: For use on Debian Based Systems
+# This script will:
 #   Clean up the local apt repository of retrieved packages (apt-get clean)
 #   Resync the package index (apt-get update)
 #   If called with AUTOUPDATE set to yes then updates will be downloaded and applied with no feed back (not recommended)
@@ -114,7 +115,7 @@ then
   apt-get -yqq upgrade > /dev/null
   check_return "apt-get -yq upgrade"
 else
-  PACKAGES_TO_BE_UPGRADED=`apt-get -Vs upgrade | perl -ne 'print if /upgraded:/ .. /upgraded,/'`
+  PACKAGES_TO_BE_UPGRADED=$(apt-get -Vs upgrade | perl -ne 'print if /upgraded:/ .. /upgraded,/')
   apt-get -yqd upgrade > /dev/null
   check_return "apt-get -yqd upgrade"
 fi

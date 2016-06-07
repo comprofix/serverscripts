@@ -1,8 +1,14 @@
 #!/bin/bash
+# Script Name: diskalert
+# Author: Matt McKinnon
+# Date: 7th June 2016
+# Description:
+#   This script will email when diskspace is high.
+
 MAILTO="support@comprofix.com"
 SMTP=mail.comprofix.com
 LOGFILE="/var/log/diskalert.log"
-THISSERVER=`hostname --fqdn`
+THISSERVER=$(hostname -f)
 MAILFROM="$(hostname)@$(dnsdomainname)"
 
 startlogging() {
@@ -53,7 +59,7 @@ See the logfile for more info: vim $LOGFILE
 
 Regards, " >/tmp/diskalertmail.msg
 
-cat /tmp/diskalertmail.msg | sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "[$THISSERVER] is running out of disk space"
+sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "[$THISSERVER] is running out of disk space" -m "$(cat /tmp/diskalertmail.msg)"
 echo "$(date) [MESSAGE] Running out of disk space email sent to $MAILTO" >> $LOGFILE
 
 fi
