@@ -14,7 +14,7 @@
 #   CREATE USER 'dbbackup'@'localhost' IDENTIFIED BY 'PASSWORD';
 #   GRANT LOCK TABLES, SELECT, SHOW VIEW, RELOAD, REPLICATION CLIENT, EVENT, TRIGGER ON *.* TO 'backup'@'localhost';
 
-SUBJECT="Database Backup Completed $BAKDATE"
+SUBJECT="$(hostname -f) Database Backup Completed $BAKDATE"
 MAILTO="support@comprofix.com"
 BAKDATE=$(date +%Y%m%d)
 DBUSER='dbbackup'
@@ -38,5 +38,5 @@ for db in $databases; do
 
 done
 
-cat /tmp/dbbackup.msg | mail -s "$SUBJECT" "$MAILTO"
+cat /tmp/dbbackup.msg | mail -r "$MAILTO" -s "$SUBJECT" "$MAILTO"
 rm -fr /tmp/dbbackup.msg
