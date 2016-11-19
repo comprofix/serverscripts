@@ -14,7 +14,7 @@ URL[0]="http://feeds.dshield.org/block.txt"
 URL[1]="http://www.spamhaus.org/drop/drop.lasso"
 
 #Counrtry BlockLists
-COUNTRY=(cn tw tr mx il id)
+COUNTRY=(cn tw tr mx il id ua za)
 IPDENY="http://www.ipdeny.com/ipblocks/data/countries"
 
 # 
