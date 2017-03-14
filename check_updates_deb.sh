@@ -15,9 +15,11 @@
 # Make user configuration changes in this section
 #
 
-MAILTO="support@comprofix.com"
-SMTP=mail.comprofix.com
-MAILFROM="$(hostname)@$(dnsdomainname)"
+MAIL="support@comprofix.com"
+O365_SMTP=$(grep SMTP office365.conf | awk -F'=' '{print $2}')
+O365_USER=$(grep USER office365.conf | awk -F'=' '{print $2}')
+O365_PASS=$(grep PASS office365.conf | awk -F'=' '{print $2}')
+
 
 AUTOUPDATE="no"
 LOGFILE="/var/log/server_maint.log"
@@ -142,7 +144,8 @@ See the logfile for more info: vim $LOGFILE
 
 Regards. " >/tmp/servermail.msg
 
-sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "[$THISSERVER] server may need some updates applied" -m "$(cat /tmp/servermail.msg)"
+sendemail -o tls=auto -s "$O365_SMTP" -xu "$O365_USER" -xp "$O365_PASS" -t "$MAIL" -f "$MAIL" -u "[$THISSERVER] server may need some updates applied" -m "$(cat /tmp/servermail.msg)"
+
 
   echo "$(date) [MESSAGE] Packages need updating email sent to $MAILTO" >> $LOGFILE
 fi
