@@ -64,45 +64,19 @@ check_return() {
 }
 
 send_error_email() {
-sendemail -f "$THISSERVER <$MAILFROM>" -t $MAILTO -u "[$THISSERVER] There was an error whilst running $0" -s $SMTP
-
-"Hello,
+sendemail -o tls=auto -s "$O365_SMTP" -xu "$O365_USER" -xp "$O365_PASS" -t "$MAIL" -f "$MAIL" -u "[$THISSERVER] There was an error whilst running $0" -m "Hello,
 
 Whilst running the update script ($0) on $THISSERVER there was a problem.
 
 [ERROR] "$1" failed to run
 
-The server has the following network interfaces configured ${SERVERADDS[@]}.
-
 Please log in via ssh (e.g. ssh root@$(hostname -f)) and check the log file:
 
 vim $LOGFILE
 
-Regards."
+Regards." -q
+
 }
-
-# IP Address stuff
-declare -a IPADDR
-declare -a NICINTERFACE
-declare -a SERVERADDS
-index=0
-
-for i in $( ifconfig | grep 'inet addr' | awk '{print $2}'| sed 's#addr:##g' );
-do
-  IPADDR[$index]=$i
-  let "index += 1"
-done
-
-index=0
-
-for i in $( ifconfig | grep 'eth' | awk '{print $1}' );
-do
-  SERVERADDS[$index]="$i ${IPADDR[$index]}"
-  let "index += 1"
-done
-
-# End IP Address stuff
-
 
 startlogging
 
@@ -134,8 +108,6 @@ Packages have been downloaded onto $THISSERVER.
 
 $PACKAGES_TO_BE_UPGRADED
 
-The server has the following network interfaces configured ${SERVERADDS[@]}.
-
 To update the server log in via ssh (e.g. ssh root@$(hostname -f)) and run the following command:
 
 apt-get upgrade
@@ -144,7 +116,7 @@ See the logfile for more info: vim $LOGFILE
 
 Regards. " >/tmp/servermail.msg
 
-sendemail -o tls=auto -s "$O365_SMTP" -xu "$O365_USER" -xp "$O365_PASS" -t "$MAIL" -f "$MAIL" -u "[$THISSERVER] server may need some updates applied" -m "$(cat /tmp/servermail.msg)"
+sendemail -o tls=auto -s "$O365_SMTP" -xu "$O365_USER" -xp "$O365_PASS" -t "$MAIL" -f "$MAIL" -u "[$THISSERVER] server may need some updates applied" -m "$(cat /tmp/servermail.msg)" -q
 
 
   echo "$(date) [MESSAGE] Packages need updating email sent to $MAILTO" >> $LOGFILE

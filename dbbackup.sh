@@ -12,10 +12,15 @@
 #   Login to mysql with your root user.
 #
 #   CREATE USER 'dbbackup'@'localhost' IDENTIFIED BY 'PASSWORD';
-#   GRANT LOCK TABLES, SELECT, SHOW VIEW, RELOAD, REPLICATION CLIENT, EVENT, TRIGGER ON *.* TO 'backup'@'localhost';
+#   GRANT LOCK TABLES, SELECT, SHOW VIEW, RELOAD, REPLICATION CLIENT, EVENT, TRIGGER ON *.* TO 'dbbackup'@'localhost';
+
+
+MAIL="support@comprofix.com"
+O365_SMTP=$(grep SMTP office365.conf | awk -F'=' '{print $2}')
+O365_USER=$(grep USER office365.conf | awk -F'=' '{print $2}')
+O365_PASS=$(grep PASS office365.conf | awk -F'=' '{print $2}')
 
 SUBJECT="$(hostname -f) Database Backup Completed $BAKDATE"
-MAILTO="support@comprofix.com"
 BAKDATE=$(date +%Y%m%d)
 DBUSER='dbbackup'
 DBPASS='EWFfP3GZsqr427Yj'
@@ -38,5 +43,8 @@ for db in $databases; do
 
 done
 
-cat /tmp/dbbackup.msg | mail -r "$MAILTO" -s "$SUBJECT" "$MAILTO"
+sendemail -o tls=auto -s "$O365_SMTP" -xu "$O365_USER" -xp "$O365_PASS" -t "$MAIL" -f "$MAIL" -u "$SUBJECT" -m "$(cat /tmp/dbbackup.msg)"
+
+#Use Below to use systems postfix or local MTA
+#cat /tmp/dbbackup.msg | mail -s "$SUBJECT" "$MAIL"
 rm -fr /tmp/dbbackup.msg
