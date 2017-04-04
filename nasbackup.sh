@@ -1,10 +1,15 @@
 #!/bin/bash
 #apps  backup  downloads  fun  games  movies  mp3s  tvshows  wow
 
-MAILTO=mmckinnon@comprofix.com
-SMTP=mail.comprofix.com
+#MAILTO=mmckinnon@comprofix.com
+#SMTP=mail.comprofix.com
 
-MAILFROM="$(hostname)@$(dnsdomainname)"
+MAIL="support@comprofix.com"
+O365_SMTP=$(grep SMTP office365.conf | awk -F'=' '{print $2}')
+O365_USER=$(grep USER office365.conf | awk -F'=' '{print $2}')
+O365_PASS=$(grep PASS office365.conf | awk -F'=' '{print $2}')
+
+#MAILFROM="$(hostname)@$(dnsdomainname)"
 SUBJECT="Backup Log `date +%d-%m-%Y`"
 LOGFOLDER=/var/log/nasbackup
 LOGFILE=$LOGFOLDER/backuplog-`date +%d-%m-%Y.log`
@@ -45,4 +50,5 @@ echo "$(date) [MESSAGE] Backup completed $LOGFILE has been emailed." >> $LOGFILE
 
 stoplogging
 
-sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "$SUBJECT" -m "$(cat $LOGFILE)"
+#sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "$SUBJECT" -m "$(cat $LOGFILE)"
+sendemail -o tls=auto -s "$O365_SMTP" -xu "$O365_USER" -xp "$O365_PASS" -t "$MAIL" -f "$MAIL" -u "$SUBJECT" -a "$LOGFILE" -m "$SUBJECT"
