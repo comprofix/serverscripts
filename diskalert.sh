@@ -5,10 +5,10 @@
 # Description:
 #   This script will email when diskspace is high.
 
-MAIL="support@comprofix.com"
-O365_SMTP=$(grep SMTP office365.conf | awk -F'=' '{print $2}')
-O365_USER=$(grep USER office365.conf | awk -F'=' '{print $2}')
-O365_PASS=$(grep PASS office365.conf | awk -F'=' '{print $2}')
+MAILTO="support@comprofix.com"
+MAILFROM="support@comprofix.com"
+THISSERVER=$(hostname -f)
+SMTP="mail.comprofix.com"
 
 LOGFILE="/var/log/diskalert.log"
 THISSERVER=$(hostname -f)
@@ -62,7 +62,8 @@ See the logfile for more info: vim $LOGFILE
 
 Regards, " >/tmp/diskalertmail.msg
 
-sendemail -o tls=auto -s "$O365_SMTP" -xu "$O365_USER" -xp "$O365_PASS" -t "$MAIL" -f "$MAIL" -u "[$THISSERVER] is running out of disk space" -m "$(cat /tmp/diskalertmail.msg)" -q
+sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "[$THISSERVER] is running out of disk space" -m "$(cat /tmp/diskalertmail.msg)" -q
+
 echo "$(date) [MESSAGE] Running out of disk space email sent to $MAILTO" >> $LOGFILE
 
 fi

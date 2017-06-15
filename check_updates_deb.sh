@@ -15,11 +15,10 @@
 # Make user configuration changes in this section
 #
 
-MAIL="support@comprofix.com"
-O365_SMTP=$(grep SMTP office365.conf | awk -F'=' '{print $2}')
-O365_USER=$(grep USER office365.conf | awk -F'=' '{print $2}')
-O365_PASS=$(grep PASS office365.conf | awk -F'=' '{print $2}')
-
+MAILTO="support@comprofix.com"
+MAILFROM="support@comprofix.com"
+THISSERVER=$(hostname -f)
+SMTP="mail.comprofix.com"
 
 AUTOUPDATE="no"
 LOGFILE="/var/log/server_maint.log"
@@ -64,7 +63,9 @@ check_return() {
 }
 
 send_error_email() {
-sendemail -o tls=auto -s "$O365_SMTP" -xu "$O365_USER" -xp "$O365_PASS" -t "$MAIL" -f "$MAIL" -u "[$THISSERVER] There was an error whilst running $0" -m "Hello,
+sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "[$THISSERVER] There was an error whilst running $0" -m "
+
+Hello,
 
 Whilst running the update script ($0) on $THISSERVER there was a problem.
 
@@ -116,7 +117,7 @@ See the logfile for more info: vim $LOGFILE
 
 Regards. " >/tmp/servermail.msg
 
-sendemail -o tls=auto -s "$O365_SMTP" -xu "$O365_USER" -xp "$O365_PASS" -t "$MAIL" -f "$MAIL" -u "[$THISSERVER] server may need some updates applied" -m "$(cat /tmp/servermail.msg)" -q
+sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "[$THISSERVER] server may need some updates applied" -m "$(cat /tmp/servermail.msg)" -q
 
 
   echo "$(date) [MESSAGE] Packages need updating email sent to $MAILTO" >> $LOGFILE

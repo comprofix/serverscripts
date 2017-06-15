@@ -16,9 +16,10 @@
 
 
 MAIL="support@comprofix.com"
-O365_SMTP=$(grep SMTP office365.conf | awk -F'=' '{print $2}')
-O365_USER=$(grep USER office365.conf | awk -F'=' '{print $2}')
-O365_PASS=$(grep PASS office365.conf | awk -F'=' '{print $2}')
+MAILTO="support@comprofix.com"
+MAILFROM="support@comprofix.com"
+THISSERVER=$(hostname -f)
+SMTP="mail.comprofix.com"
 
 SUBJECT="$(hostname -f) Database Backup Completed $BAKDATE"
 BAKDATE=$(date +%Y%m%d)
@@ -43,7 +44,7 @@ for db in $databases; do
 
 done
 
-sendemail -o tls=auto -s "$O365_SMTP" -xu "$O365_USER" -xp "$O365_PASS" -t "$MAIL" -f "$MAIL" -u "$SUBJECT" -m "$(cat /tmp/dbbackup.msg)"
+sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "$SUBJECT" -m "$(cat /tmp/dbbackup.msg)" -q
 
 #Use Below to use systems postfix or local MTA
 #cat /tmp/dbbackup.msg | mail -s "$SUBJECT" "$MAIL"

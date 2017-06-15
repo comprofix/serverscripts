@@ -35,12 +35,6 @@ This script checks for updates on your Debian based systems. If any updates are 
 ln -s $(pwd)/check_updates_deb_sh /etc/cron.daily
 </code></pre>
 
-#### check_updates_rpm.sh
-
-This is the same as above but for use on rpm based distributions (CentOS, Fedora etc)
-
-This script has been tested and used on CentOS.
-
 #### dbbackup.sh
 
 This scripts backs up mysql databases and rotates the number of backups through seven days.
@@ -87,16 +81,6 @@ This script does an rsync from one folder location to another
 <b>Installation</b>
 <pre><code>
 ln -s ${PWD}/nasbackup.sh /etc/cron.daily
-</code></pre>
-
-#### rkhunter.sh
-
-Script sends an email with the rkhunter scan and report.
-
-<b>Installation</b>
-<pre><code>
-apt-get install rkhunter
-ln -s ${PWD}/rkhunter.sh /etc/cron.daily
 </code></pre>
 
 #### mailQWatch.sh
