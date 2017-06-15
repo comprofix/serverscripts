@@ -48,4 +48,4 @@ echo "$(date) [MESSAGE] Backup completed $LOGFILE has been emailed." >> $LOGFILE
 stoplogging
 
 
-sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "$SUBJECT" -a "$LOGFILE" -m "$SUBJECT"
+sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "$SUBJECT" -a "$LOGFILE" -m "$SUBJECT" -q
