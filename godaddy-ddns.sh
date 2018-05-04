@@ -26,8 +26,8 @@ SMTP="mail.comprofix.com"
  
 domain="comprofix.com"   # your domain
 name="home"     # name of A record to update
-key=$(cat godaddy_keys | grep KEY | awk '{ print $2 }') # key for godaddy developer API
-secret=$(cat godaddy_keys | grep SECRET | awk '{ print $2 }')   # secret for godaddy developer API
+key=$(cat /opt/scripts/godaddy_keys | grep KEY | awk '{ print $2 }') # key for godaddy developer API
+secret=$(cat /opt/scripts//godaddy_keys | grep SECRET | awk '{ print $2 }')   # secret for godaddy developer API
 
 headers="Authorization: sso-key $key:$secret"
 
