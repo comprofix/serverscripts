@@ -45,22 +45,23 @@ startlogging
 rotate_backups
 
 
-#Backup www_root website files
+#Backup website files
 
-WWW_ROOT=$(MYSQL_PWD=$(cat /etc/psa/.psa.shadow) mysql -sN -uadmin -e 'select www_root from psa.hosting; ')
+# Get domain ID
+IDS=$(MYSQL_PWD=$(cat /etc/psa/.psa.shadow) mysql -sN -uadmin -e 'select id from psa.domains, psa.hosting where id = dom_id order by id;')
 
-for domain in $WWW_ROOT; do
-   ARCHIVE=$(echo $domain | awk -F/ '{print $6}';)
-   echo "$(date) [MESSAGE] Creating archive of $domain" >> $LOGFILE
-   zip -rq $BACKUPDIR/$ARCHIVE.$BAKDATE.zip $domain
+#Use ID to get domain name and www_root folders and create archive using domain name.
+for ID in $IDS; do
+    DOMAIN_NAME=$(MYSQL_PWD=$(cat /etc/psa/.psa.shadow) mysql -sN -uadmin -e 'select name from psa.domains,psa.hosting where id = '$ID' AND dom_id ='$ID' order by id;')
+    WWW_ROOT=$(MYSQL_PWD=$(cat /etc/psa/.psa.shadow) mysql -sN -uadmin -e 'select www_root from psa.domains,psa.hosting where id = '$ID' AND  dom_id ='$ID' order by id;')
+    
+   echo "$(date) [MESSAGE] Creating archive of $DOMAIN_NAME" >> $LOGFILE
+   zip -rq $BACKUPDIR/$DOMAIN_NAME.$BAKDATE.zip $WWW_ROOT
 done
 
 #Backup databases
 
 databases=$(MYSQL_PWD=$(cat /etc/psa/.psa.shadow) mysql -sN -uadmin -e "SHOW DATABASES;" | tr -d "| " | grep -v Database)
-
-#echo $databases;
-
 
 for db in $databases; do
     if [[ "$db" != "information_schema" ]] && [[ "$db" != "performance_schema" ]] && [[ "$db" != "mysql" ]] && [[ "$db" != _* ]] && [[ "$db" != "apsc" ]] && [[ "$db" != "horde" ]] && [[ "$db" != phpmyadmin_* ]] && [[ "$db" != "psa" ]] && [[ "$db" != "roundcubemail" ]] ; then
