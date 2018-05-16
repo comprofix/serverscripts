@@ -22,7 +22,7 @@ LOGFILE=$LOGFOLDER/backuplog-`date +%d-%m-%Y.log`
 
 
 rotate_backups() {
-    find $BACKUPDIR -type f -mtime +7 -exec rm -frv {} \;
+    find $BACKUPDIR -type f -mtime +1 -exec rm -fr {} \;
 
 }
 
@@ -56,7 +56,12 @@ for ID in $IDS; do
     WWW_ROOT=$(MYSQL_PWD=$(cat /etc/psa/.psa.shadow) mysql -sN -uadmin -e 'select www_root from psa.domains,psa.hosting where id = '$ID' AND  dom_id ='$ID' order by id;')
     
    echo "$(date) [MESSAGE] Creating archive of $DOMAIN_NAME" >> $LOGFILE
-   zip -rq $BACKUPDIR/$DOMAIN_NAME.$BAKDATE.zip $WWW_ROOT
+   if [ $DOMAIN_NAME = 'cloud.comprofix.com' ]; then
+        zip -rq $BACKUPDIR/$DOMAIN_NAME.$BAKDATE.zip $WWW_ROOT -x '*data*'
+   else
+        zip -rq $BACKUPDIR/$DOMAIN_NAME.$BAKDATE.zip $WWW_ROOT
+   fi
+ 
 done
 
 #Backup databases
@@ -73,8 +78,8 @@ done
 #Backup files to offsite location
 
 echo "$(date) [MESSAGE] Copying backup files to offsite location" >> $LOGFILE
-scp -rq -P 2222 $BACKUPDIR/* moe@home.comprofix.com:/data/backup/website
-
+#scp -rq -P 2222 $BACKUPDIR/* moe@home.comprofix.com:/data/backup/website
+rsync -avz -e "ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /BACKUP/ moe@home.comprofix.com:/data/backup/websites/ >> $LOGFILE
 echo "$(date) [MESSAGE] Sending email of backup report" >> $LOGFILE
 
 stoplogging
