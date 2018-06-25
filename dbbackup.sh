@@ -24,7 +24,7 @@ SMTP="mail.comprofix.com"
 SUBJECT="$(hostname -f) Database Backup Completed $BAKDATE"
 BAKDATE=$(date +%Y%m%d)
 DBUSER='dbbackup'
-DBPASS='EWFfP3GZsqr427Yj'
+DBPASS='MdCg8uTSEWhmv7+D'
 BACKUPDIR='/BACKUP/db/'
 
 rotate_backups() {
@@ -44,8 +44,8 @@ for db in $databases; do
 
 done
 
-sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "$SUBJECT" -m "$(cat /tmp/dbbackup.msg)" -q
+#sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "$SUBJECT" -m "$(cat /tmp/dbbackup.msg)" -q
 
 #Use Below to use systems postfix or local MTA
-#cat /tmp/dbbackup.msg | mail -s "$SUBJECT" "$MAIL"
+cat /tmp/dbbackup.msg | mail -s "$SUBJECT" "$MAIL"
 rm -fr /tmp/dbbackup.msg
