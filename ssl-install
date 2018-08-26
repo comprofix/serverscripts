@@ -14,21 +14,24 @@
 #
 #
 
-DOM_NAME="home.comprofix.com"
-ESXI_SERVER="esxi.home.comprofix.com"
+DOM_NAME="comprofix.com"
+ESXI_SERVER="esxi.comprofix.com"
 
 
-if [ ! -d ~/.acme.sh ]; then
+if [ ! -d $HOME/.acme.sh ]; then
     echo "Folder does not exist"
     exit 0
 else
-    # echo "You are using acme.sh. Well done"
+    echo "You are using acme.sh. Well done"
+   
 fi
 
 
 scp -q ~/.acme.sh/$DOM_NAME/$DOM_NAME.cer root@$ESXI_SERVER:/etc/vmware/ssl/rui.crt
 scp -q ~/.acme.sh/$DOM_NAME/$DOM_NAME.key root@$ESXI_SERVER:/etc/vmware/ssl/rui.key
-ssh -qt root@$ESXI_SERVER "/sbin/services.sh restart"
+#ssh -qt root@$ESXI_SERVER "/sbin/services.sh restart"
+ssh -qt root@$ESXI_SERVER "/etc/init.d/hostd restart"
+ssh -qt root@$ESXI_SERVER "/etc/init.d/vpxa restart"
 
 
 
