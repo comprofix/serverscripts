@@ -14,8 +14,8 @@
 #
 #
 
-DOM_NAME="comprofix.com"
-ESXI_SERVER="esxi.comprofix.com"
+DOM_NAME="home.comprofix.com"
+ESXI_SERVER="esxi.home.comprofix.com"
 
 
 if [ ! -d $HOME/.acme.sh ]; then
@@ -27,11 +27,11 @@ else
 fi
 
 
-scp -q ~/.acme.sh/$DOM_NAME/$DOM_NAME.cer root@$ESXI_SERVER:/etc/vmware/ssl/rui.crt
-scp -q ~/.acme.sh/$DOM_NAME/$DOM_NAME.key root@$ESXI_SERVER:/etc/vmware/ssl/rui.key
+scp  ~/.acme.sh/$DOM_NAME/$DOM_NAME.cer root@$ESXI_SERVER:/etc/vmware/ssl/rui.crt
+scp  ~/.acme.sh/$DOM_NAME/$DOM_NAME.key root@$ESXI_SERVER:/etc/vmware/ssl/rui.key
 #ssh -qt root@$ESXI_SERVER "/sbin/services.sh restart"
-ssh -qt root@$ESXI_SERVER "/etc/init.d/hostd restart"
-ssh -qt root@$ESXI_SERVER "/etc/init.d/vpxa restart"
+ssh -t root@$ESXI_SERVER "/etc/init.d/hostd restart"
+ssh -t root@$ESXI_SERVER "/etc/init.d/vpxa restart"
 
 
 
