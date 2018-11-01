@@ -79,7 +79,7 @@ done
 
 echo "$(date) [MESSAGE] Copying backup files to offsite location" >> $LOGFILE
 #scp -rq -P 2222 $BACKUPDIR/* moe@home.comprofix.com:/data/backup/website
-rsync -avz -e "ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /BACKUP/ moe@home.comprofix.com:/data/backup/websites/ >> $LOGFILE
+rsync -avz -e "ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" /BACKUP/ administrator@home.comprofix.com:/data/backup/websites/ >> $LOGFILE
 echo "$(date) [MESSAGE] Sending email of backup report" >> $LOGFILE
 
 stoplogging
