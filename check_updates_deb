@@ -18,7 +18,7 @@
 MAILTO="support@comprofix.com"
 MAILFROM="support@comprofix.com"
 THISSERVER=$(hostname -f)
-SMTP="mail.comprofix.local"
+SMTP="webserver.home.comprofix.com"
 
 AUTOUPDATE="no"
 LOGFILE="/var/log/server_maint.log"
