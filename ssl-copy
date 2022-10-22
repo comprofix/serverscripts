@@ -1,0 +1,23 @@
+#!/bin/bash
+# Script Name: ssl-install
+# Author: Matt McKinnon
+# Date: 28th May 2018
+# Description:
+#
+#             Script used to copy Let's Encrypt Generated Certificates from generating server to remote host .
+
+DOCKER_HOST="docker.comprofix.xyz"
+PROXMOX="pve1.comprofix.xyz"
+TRUENAS="truenas.comprofix.xyz"
+
+scp /mnt/nfs/docker/npm/letsencrypt/live/npm-21/fullchain.pem root@$PROXMOX:/etc/pve/nodes/pve1/pveproxy-ssl.pem
+scp /mnt/nfs/docker/npm/letsencrypt/live/npm-21/privkey.pem  root@$PROXMOX:/etc/pve/nodes/pve1/pveproxy-ssl.key
+ssh -t root@$PROXMOX "systemctl restart pveproxy"
+
+scp /mnt/nfs/docker/npm/letsencrypt/live/npm-21/fullchain.pem root@$TRUENAS:/etc/certificates/truenas_default.crt
+scp /mnt/nfs/docker/npm/letsencrypt/live/npm-21/privkey.pem  root@$TRUENAS:/etc/certificates/truenas_default.key
+
+ssh -t root@$TRUENAS "systemctl restart nginx"
+
+
+#ssh -t root@$ESXI_SERVER "/etc/init.d/vpxa restart"

@@ -15,17 +15,16 @@
 #   GRANT LOCK TABLES, SELECT, SHOW VIEW, RELOAD, REPLICATION CLIENT, EVENT, TRIGGER ON *.* TO 'dbbackup'@'localhost';
 
 
-MAIL="support@comprofix.com"
 MAILTO="support@comprofix.com"
 MAILFROM="support@comprofix.com"
-THISSERVER=$(hostname -f)
-SMTP="mail.comprofix.com"
+SQLSERVER="docker.comprofix.xyz"
+SMTP="comprofix-com.mail.protection.outlook.com"
 
-SUBJECT="$(hostname -f) Database Backup Completed $BAKDATE"
 BAKDATE=$(date +%Y%m%d)
+SUBJECT="$SQLSERVER Database Backup Completed - $BAKDATE"
 DBUSER='dbbackup'
 DBPASS='MdCg8uTSEWhmv7+D'
-BACKUPDIR='/BACKUP/db/'
+BACKUPDIR='/mnt/nfs/archive/db/'
 
 rotate_backups() {
     find $BACKUPDIR -type f -mtime +7 -exec rm -frv {} \;
@@ -34,18 +33,18 @@ rotate_backups() {
 
 rotate_backups
 
-databases=$(mysql --user=$DBUSER --password=$DBPASS -e "SHOW DATABASES;" | tr -d "| " | grep -v Database)
+databases=$(mysql --user=$DBUSER --password=$DBPASS --host=$SQLSERVER -e "SHOW DATABASES;" | tr -d "| " | grep -v Database)
 
 for db in $databases; do
     if [[ "$db" != "information_schema" ]] && [[ "$db" != "performance_schema" ]] && [[ "$db" != "mysql" ]] && [[ "$db" != _* ]] ; then
         echo "Dumping database: $db" >> /tmp/dbbackup.msg
-        mysqldump --force --opt --user=$DBUSER --password=$DBPASS --databases $db > $BACKUPDIR/$db.$BAKDATE.sql
+        mysqldump --force --opt --user=$DBUSER --password=$DBPASS --host=$SQLSERVER --databases $db > $BACKUPDIR/$db.$BAKDATE.sql
     fi
 
 done
 
-#sendemail -o tls=no -s $SMTP -t $MAILTO -f "$THISSERVER <$MAILFROM>" -u "$SUBJECT" -m "$(cat /tmp/dbbackup.msg)" -q
+sendemail -o tls=yes -s $SMTP -t $MAILTO -f "$SQLSERVER <$MAILFROM>" -u "$SUBJECT" -m "$(cat /tmp/dbbackup.msg)" -q
 
 #Use Below to use systems postfix or local MTA
-cat /tmp/dbbackup.msg | mail -s "$SUBJECT" "$MAIL"
+#cat /tmp/dbbackup.msg | mail -s "$SUBJECT" "$MAIL"
 rm -fr /tmp/dbbackup.msg
