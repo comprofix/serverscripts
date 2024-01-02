@@ -6,18 +6,23 @@
 #
 #             Script used to copy Let's Encrypt Generated Certificates from generating server to remote host .
 
-DOCKER_HOST="docker.comprofix.xyz"
+GITLAB="gitlab.comprofix.com"
 PROXMOX="pve1.comprofix.xyz"
 TRUENAS="truenas.comprofix.xyz"
 
-scp /mnt/nfs/docker/npm/letsencrypt/live/npm-21/fullchain.pem root@$PROXMOX:/etc/pve/nodes/pve1/pveproxy-ssl.pem
-scp /mnt/nfs/docker/npm/letsencrypt/live/npm-21/privkey.pem  root@$PROXMOX:/etc/pve/nodes/pve1/pveproxy-ssl.key
+scp /mnt/nfs/docker/traefik/config/certificates/comprofix.xyz.cer root@$PROXMOX:/etc/pve/nodes/pve1/pveproxy-ssl.pem
+scp /mnt/nfs/docker/traefik/config/certificates/comprofix.xyz.key root@$PROXMOX:/etc/pve/nodes/pve1/pveproxy-ssl.key
 ssh -t root@$PROXMOX "systemctl restart pveproxy"
 
-scp /mnt/nfs/docker/npm/letsencrypt/live/npm-21/fullchain.pem root@$TRUENAS:/etc/certificates/truenas_default.crt
-scp /mnt/nfs/docker/npm/letsencrypt/live/npm-21/privkey.pem  root@$TRUENAS:/etc/certificates/truenas_default.key
+scp /mnt/nfs/docker/traefik/config/certificates/comprofix.xyz.cer root@$TRUENAS:/etc/certificates/truenas_default.crt
+scp /mnt/nfs/docker/traefik/config/certificates/comprofix.xyz.key root@$TRUENAS:/etc/certificates/truenas_default.key
 
 ssh -t root@$TRUENAS "systemctl restart nginx"
 
+scp /mnt/nfs/docker/traefik/config/certificates/comprofix.com.cer root@$GITLAB:/etc/gitlab/ssl/gitlab.comprofix.com.crt
+scp /mnt/nfs/docker/traefik/config/certificates/comprofix.com.key root@$GITLAB:/etc/gitlab/ssl/gitlab.comprofix.com.key
 
-#ssh -t root@$ESXI_SERVER "/etc/init.d/vpxa restart"
+scp /mnt/nfs/docker/traefik/config/certificates/registry.gitlab.comprofix.com.cer root@$GITLAB:/etc/gitlab/ssl/registry.gitlab.comprofix.com.crt
+scp /mnt/nfs/docker/traefik/config/certificates/registry.gitlab.comprofix.com.key root@$GITLAB:/etc/gitlab/ssl/registry.gitlab.comprofix.com.key
+
+ssh -t root@$GITLAB "gitlab-ctl restart nginx"
