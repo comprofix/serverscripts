@@ -8,7 +8,7 @@
 MAILTO="support@comprofix.com"
 MAILFROM="support@comprofix.com"
 THISSERVER=$(hostname -f)
-SMTP="mail.comprofix.com"
+SMTP="comprofix-com.mail.protection.outlook.com"
 
 LOGFILE="/var/log/diskalert.log"
 THISSERVER=$(hostname -f)
