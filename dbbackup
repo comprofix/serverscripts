@@ -17,13 +17,13 @@
 
 MAILTO="support@comprofix.com"
 MAILFROM="support@comprofix.com"
-SQLSERVER="docker.comprofix.xyz"
+SQLSERVER="mysql.comprofix.xyz"
 SMTP="comprofix-com.mail.protection.outlook.com"
 
 BAKDATE=$(date +%Y%m%d)
 SUBJECT="$SQLSERVER Database Backup Completed - $BAKDATE"
 DBUSER='dbbackup'
-DBPASS='MdCg8uTSEWhmv7+D'
+DBPASS=$(cat ~/.dbpassword)
 BACKUPDIR='/mnt/nfs/archive/db/'
 
 rotate_backups() {
@@ -33,18 +33,18 @@ rotate_backups() {
 
 rotate_backups
 
-databases=$(mysql --user=$DBUSER --password=$DBPASS --host=$SQLSERVER -e "SHOW DATABASES;" | tr -d "| " | grep -v Database)
+databases=$(mariadb --user=$DBUSER --password=$DBPASS --host=$SQLSERVER -e "SHOW DATABASES;" | tr -d "| " | grep -v Database)
 
 for db in $databases; do
-    if [[ "$db" != "information_schema" ]] && [[ "$db" != "performance_schema" ]] && [[ "$db" != "mysql" ]] && [[ "$db" != _* ]] ; then
+    if [[ "$db" != "information_schema" ]] && [[ "$db" != "performance_schema" ]] && [[ "$db" != "mysql" ]] && [[ "$db" != "sys" ]] && [[ "$db" != "test" ]] && [[ "$db" != _* ]] ; then
         echo "Dumping database: $db" >> /tmp/dbbackup.msg
-        mysqldump --force --opt --user=$DBUSER --password=$DBPASS --host=$SQLSERVER --databases $db > $BACKUPDIR/$db.$BAKDATE.sql
+        mariadb-dump --force --opt --user=$DBUSER --password=$DBPASS --host=$SQLSERVER --databases $db > $BACKUPDIR/$db.$BAKDATE.sql
     fi
 
 done
 
-sendemail -o tls=yes -s $SMTP -t $MAILTO -f "$SQLSERVER <$MAILFROM>" -u "$SUBJECT" -m "$(cat /tmp/dbbackup.msg)" -q
+#sendemail -o tls=yes -s $SMTP -t $MAILTO -f "$SQLSERVER <$MAILFROM>" -u "$SUBJECT" -m "$(cat /tmp/dbbackup.msg)" -q
 
 #Use Below to use systems postfix or local MTA
-#cat /tmp/dbbackup.msg | mail -s "$SUBJECT" "$MAIL"
-rm -fr /tmp/dbbackup.msg
+#cat /tmp/dbbackup.msg #| mail -s "$SUBJECT" "$MAIL"
+#rm -fr /tmp/dbbackup.msg
