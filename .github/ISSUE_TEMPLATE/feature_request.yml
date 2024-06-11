@@ -3,7 +3,7 @@ description: 'Track the process of adding a new application'
 title: 'Add Application: [Application Name]'
 labels: 
   - addition
-assignees: ''
+assignees: ' '
 
 body:
   - type: markdown
